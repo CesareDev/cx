@@ -2,10 +2,11 @@
 
 Custome hex dump written in C following the style of the existing `xxd`
 
-## Build and installation 
+## Requirements
 
-- Requirements:
-    - `cmake`
+- `cmake`
+
+## Building
 
 1. Clone the repo
     - `git clone https://github.com/CesareDev/cx.git`

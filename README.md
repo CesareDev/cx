@@ -1,3 +1,3 @@
 # CX
 
-Custome hex dump written in `C`
+Custome hex dump written in C

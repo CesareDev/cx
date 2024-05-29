@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include <stdio.h>
 #include <sys/stat.h>
 #include <math.h>
@@ -109,8 +110,9 @@ int file_handling(const char* input)
     while (current_byte != EOF)
     {
         unsigned char encoded_byte = (unsigned char)current_byte;
-        // Non printable charcter -> control character
-        if (encoded_byte < 32)
+
+        // Non printable charcter -> control character or non ASCII character
+        if (encoded_byte < 32 || !isascii(current_byte))
         {
             encoded_byte = '.';
         }

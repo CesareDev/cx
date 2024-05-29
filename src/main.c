@@ -20,6 +20,27 @@ double custom_log(double base, double x)
     return log(x) / log(base);
 }
 
+void print_encoding_char(int not_encoded_byte)
+{
+    // Not printable character
+    if (not_encoded_byte < 32)
+    {
+        // Add a "0" to the byte < 16 for better formatting
+        if (not_encoded_byte < 16)
+        {
+            printf("%s0%hhx%s ", KYEL, not_encoded_byte, KNRM);
+        }
+        else 
+        {
+            printf("%s%hhx%s ", KYEL, not_encoded_byte, KNRM);
+        } 
+    }
+    else 
+    {
+        printf("%s%hhx%s ", KGRN, not_encoded_byte, KNRM);
+    }
+}
+
 int file_handling(const char* input)
 {
     // Check if the input is a directory
@@ -80,44 +101,23 @@ int file_handling(const char* input)
     // 10 -> Decimal representation
     // 16 -> Hexadecimal representation
     // ...
-
     unsigned int offset_digits = (int)custom_log(10, file_size) + 1;
     printf("%0*lx: ", offset_digits, offset);
 
-    char line_encoding[16] = { 0 };
+    unsigned char line_encoding[16] = { 0 };
 
     while (current_byte != EOF)
     {
-        char encoded_byte = (char)current_byte;
-        if (encoded_byte == '\n')
+        unsigned char encoded_byte = (unsigned char)current_byte;
+        // Non printable charcter -> control character
+        if (encoded_byte < 32)
         {
             encoded_byte = '.';
         }
         line_encoding[byte_offset - 1] = encoded_byte;
 
-        // Add a "0" to the byte < 16 for better formatting
-        if (current_byte < 16)
-        {
-            if ((char)current_byte == '\n')
-            {
-                printf("%s0%hhx%s ", KYEL, current_byte, KNRM);
-            }
-            else 
-            {
-                printf("%s0%hhx%s ", KGRN, current_byte, KNRM);
-            }
-        }
-        else 
-        {
-            if ((char)current_byte == '\n')
-            {
-                printf("%s%hhx%s ", KYEL, current_byte, KNRM);
-            }
-            else 
-            {
-                printf("%s%hhx%s ", KGRN, current_byte, KNRM);
-            }
-        }
+        print_encoding_char(current_byte);
+
         current_byte = getc(file_buffer);
 
         // After printing 8 byte add a "separator"

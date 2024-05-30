@@ -19,5 +19,6 @@ Custome hex dump written in C following the style of the existing `xxd`
 
 ## ToDo
 
-- [ ] Better text formatting
-- [ ] Adding more options
+- Better text formatting
+- Adding more options
+    - Output into a readable file or even in a `h`, `c` file in order to use it into other programs

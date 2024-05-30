@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <sys/stat.h>
+#include <stdbool.h>
 
 #include "file_handling.h"
 
@@ -84,17 +85,23 @@ int handle_input(char* input)
     unsigned int offset_digits = (int)(log(file_size) / log(10)) + 1;
     printf("- %0*lx: ", offset_digits, offset);
 
-    unsigned char line_encoding[16] = { 0 };
+    typedef struct 
+    {
+        unsigned char character;
+        bool is_ascii;
+    } encode;
 
+    encode line_encoding[OFFSET_LIMIT];
 
     while (current_byte != EOF)
     {
         unsigned char encoded_byte = (unsigned char)current_byte;
-
+        bool ascii = true;
         // Non printable charcter -> control character or non ASCII character 
         if (current_byte < 32 || !isascii(current_byte))
         {
             encoded_byte = '.';
+            ascii = false;
             // Add a "0" to the byte < 16 for better formatting
             if (current_byte < 16)
             {
@@ -110,7 +117,8 @@ int handle_input(char* input)
             printf("%s%hhx%s ", KGRN, current_byte, KNRM);
         }
 
-        line_encoding[byte_offset - 1] = encoded_byte;
+        line_encoding[byte_offset - 1].character = encoded_byte;
+        line_encoding[byte_offset - 1].is_ascii = ascii;
 
         current_byte = getc(file_buffer);
 
@@ -124,7 +132,18 @@ int handle_input(char* input)
         // After print all the 16 (OFFSET_LIMIT) byte go to new line and print the offset 
         if (byte_offset > OFFSET_LIMIT && current_byte != EOF)
         {
-            printf("| %s", line_encoding);
+            printf("| ");
+            for (unsigned char i = 0; i < OFFSET_LIMIT; i++)
+            {
+                if (line_encoding[i].is_ascii)
+                {
+                    printf("%c", line_encoding[i].character);
+                }
+                else 
+                {
+                    printf("%s%c%s", KYEL, line_encoding[i].character, KNRM);
+                }
+            }
             printf("\n");
             byte_offset = 1;
             offset += OFFSET_LIMIT;
@@ -135,7 +154,8 @@ int handle_input(char* input)
             // Clear the buffer
             for (int i = 0; i < OFFSET_LIMIT; i++)
             {
-                line_encoding[i] = 0;
+                line_encoding[i].character = 0;
+                line_encoding[i].is_ascii = false;
             }
         } 
 
@@ -150,7 +170,19 @@ int handle_input(char* input)
                 // Space between the 8 bytes groups
                 printing_offset += 2; 
             }
-            printf("%*s| %s\n", printing_offset, "", line_encoding);
+            printf("%*s| ", printing_offset, "");
+            for (unsigned char i = 0; i < OFFSET_LIMIT; i++)
+            {
+                if (line_encoding[i].is_ascii)
+                {
+                    printf("%c", line_encoding[i].character);
+                }
+                else 
+                {
+                    printf("%s%c%s", KYEL, line_encoding[i].character, KNRM);
+                }
+            }
+            printf("\n");
         }
     }
 

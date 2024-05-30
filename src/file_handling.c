@@ -69,6 +69,7 @@ int handle_input(char* input)
     }
 
     // Start reading the file and format the output
+    printf("Structure:\n<byte-offset> : <content> | <encoding>\n\n");
 
     // Read the first byte
     int current_byte = getc(file_buffer);
@@ -81,9 +82,10 @@ int handle_input(char* input)
     // ...
     //
     unsigned int offset_digits = (int)(log(file_size) / log(10)) + 1;
-    printf("%0*lx: ", offset_digits, offset);
+    printf("- %0*lx: ", offset_digits, offset);
 
     unsigned char line_encoding[16] = { 0 };
+
 
     while (current_byte != EOF)
     {
@@ -128,7 +130,7 @@ int handle_input(char* input)
             offset += OFFSET_LIMIT;
             if (offset < file_size)
             {
-                printf("%0*ld: ", offset_digits, offset);
+                printf("- %0*ld: ", offset_digits, offset);
             }
             // Clear the buffer
             for (int i = 0; i < OFFSET_LIMIT; i++)
@@ -151,6 +153,8 @@ int handle_input(char* input)
             printf("%*s| %s\n", printing_offset, "", line_encoding);
         }
     }
+
+    printf("\nTotal file size: %s%ld byte%s\n", KRED, file_size, KNRM);
 
     // Close the file buffer
     fclose(file_buffer);

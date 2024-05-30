@@ -16,9 +16,3 @@ Custome hex dump written in C following the style of the existing `xxd`
     - `cd build/debug && make`
 4. Run the bin
     - `./ck some_file`
-
-## ToDo
-
-- Better text formatting
-- Adding more options
-    - Output into a readable file or even in a `h`, `c` file in order to use it into other programs

@@ -5,9 +5,9 @@
 
 int parse_argument(int arg_count, char* arg_vector[])
 {
-    if (arg_count <= 1)
+    if (arg_count == 1)
     {
-        printf("Usage: cx [-options] <file-name>\n");
+        printf("Usage: %s [-options] <file-name>\n", arg_vector[0]);
         printf("Options:    '-h' Print this help page\n");
         return 1;
     }
@@ -28,13 +28,13 @@ int parse_argument(int arg_count, char* arg_vector[])
         {
             if (cmd_input[1] == 'h')
             {
-                printf("Usage: cx <file-name>\n");
+                printf("Usage: %s [-options] <file-name>\n", arg_vector[0]);
                 printf("Options:    '-h' Help\n");
                 return 0;
             }
             else 
             {
-                printf("Invalid options, run: cx -h for more information\n");
+                printf("Invalid options, run: %s -h for more information\n", arg_vector[0]);
                 return 1;
             }
         }
@@ -44,7 +44,7 @@ int parse_argument(int arg_count, char* arg_vector[])
 
     if (arg_count > 2)
     {
-        printf("To many arguments, type 'cx -h' for help\n");
+        printf("To many arguments, type '%s -h' for help\n", arg_vector[0]);
         return 1;
     }
 

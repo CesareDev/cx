@@ -89,6 +89,7 @@ int handle_input(char* input)
     {
         unsigned char character;
         bool is_ascii;
+        bool printable;
     } encode;
 
     encode line_encoding[OFFSET_LIMIT];
@@ -96,16 +97,31 @@ int handle_input(char* input)
     while (current_byte != EOF)
     {
         unsigned char encoded_byte = (unsigned char)current_byte;
-        bool ascii = true;
+        bool ascii = isascii(current_byte);
+        bool printable = true;
         // Non printable charcter -> control character or non ASCII character 
-        if (current_byte < 32 || !isascii(current_byte))
+        if (!ascii)
         {
-            encoded_byte = '.';
-            ascii = false;
+            encoded_byte = '?';
+            printable = false;
             // Add a "0" to the byte < 16 for better formatting
             if (current_byte < 16)
+            { 
+                printf("%s0%hhx%s ", KRED, current_byte, KNRM); 
+            } 
+            else 
             {
-                printf("%s0%hhx%s ", KYEL, current_byte, KNRM);
+                printf("%s%hhx%s ", KRED, current_byte, KNRM);
+            }
+        }
+        else if (current_byte < 32)
+        {
+            encoded_byte = '.';
+            printable = false;
+            // Add a "0" to the byte < 16 for better formatting
+            if (current_byte < 16)
+            { 
+                printf("%s0%hhx%s ", KYEL, current_byte, KNRM); 
             } 
             else 
             {
@@ -119,6 +135,7 @@ int handle_input(char* input)
 
         line_encoding[byte_offset - 1].character = encoded_byte;
         line_encoding[byte_offset - 1].is_ascii = ascii;
+        line_encoding[byte_offset - 1].printable = printable;
 
         current_byte = getc(file_buffer);
 
@@ -135,14 +152,18 @@ int handle_input(char* input)
             printf("| ");
             for (unsigned char i = 0; i < OFFSET_LIMIT; i++)
             {
-                if (line_encoding[i].is_ascii)
+                if (line_encoding[i].is_ascii && line_encoding[i].printable)
                 {
                     printf("%c", line_encoding[i].character);
                 }
-                else 
+                else if (!line_encoding[i].printable && line_encoding[i].is_ascii)
                 {
                     printf("%s%c%s", KYEL, line_encoding[i].character, KNRM);
                 }
+                else 
+                {
+                    printf("%s%c%s", KRED, line_encoding[i].character, KNRM);
+                } 
             }
             printf("\n");
             byte_offset = 1;
@@ -155,7 +176,8 @@ int handle_input(char* input)
             for (int i = 0; i < OFFSET_LIMIT; i++)
             {
                 line_encoding[i].character = 0;
-                line_encoding[i].is_ascii = false;
+                line_encoding[i].is_ascii = true;
+                line_encoding[i].printable = true;
             }
         } 
 
@@ -172,18 +194,22 @@ int handle_input(char* input)
                     printf("  ");
                 }
                 // Placeholder character
-                printf("%s--%s ", KRED, KNRM);
+                printf("%s--%s ", KBLU, KNRM);
             }
             printf("| ");
             for (unsigned char i = 0; i < OFFSET_LIMIT; i++)
             {
-                if (line_encoding[i].is_ascii)
+                if (line_encoding[i].is_ascii && line_encoding[i].printable)
                 {
                     printf("%c", line_encoding[i].character);
                 }
-                else 
+                else if (!line_encoding[i].printable && line_encoding[i].is_ascii)
                 {
                     printf("%s%c%s", KYEL, line_encoding[i].character, KNRM);
+                }
+                else 
+                {
+                    printf("%s%c%s", KRED, line_encoding[i].character, KNRM);
                 }
             }
             printf("\n");

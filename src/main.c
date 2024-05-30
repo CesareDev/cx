@@ -6,7 +6,7 @@
 #define OFFSET_LIMIT 16
 
 // Thanks to https://stackoverflow.com/a/27125283
-// Usage: printf("%sred\n", KRED);
+// Usage: printf("%s This line is red\n", KRED);
 #define KNRM  "\x1B[0m"
 #define KRED  "\x1B[31m"
 #define KGRN  "\x1B[32m"

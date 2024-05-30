@@ -24,7 +24,7 @@ double custom_log(double base, double x)
 void print_encoding_char(int not_encoded_byte)
 {
     // Not printable character
-    if (not_encoded_byte < 32)
+    if (not_encoded_byte < 32 || !isascii(not_encoded_byte))
     {
         // Add a "0" to the byte < 16 for better formatting
         if (not_encoded_byte < 16)

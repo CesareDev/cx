@@ -193,7 +193,7 @@ int main(int argc, char* argv[])
         {
             if (cmd_input[1] == 'h')
             {
-                printf("Usage: cx <file-name>\n\n");
+                printf("Usage: cx <file-name>\n");
                 printf("Options:    '-h' Help\n");
                 return 0;
             }

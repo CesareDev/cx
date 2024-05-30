@@ -106,7 +106,7 @@ int handle_input(char* input)
             if (current_byte < 16)
             {
                 printf("%s0%hhx%s ", KYEL, current_byte, KNRM);
-            }
+            } 
             else 
             {
                 printf("%s%hhx%s ", KYEL, current_byte, KNRM);
@@ -164,13 +164,17 @@ int handle_input(char* input)
         if (current_byte == EOF)
         {
             int offset_diff = OFFSET_LIMIT - (byte_offset - 1);
-            int printing_offset = offset_diff * 3;
-            if (byte_offset <= 8) 
+            for (int i = 0; i < offset_diff; i++)
             {
-                // Space between the 8 bytes groups
-                printing_offset += 2; 
+                // Add a space if we surpass the first half of byte
+                if (offset_diff - 8 > 0 && i == offset_diff - 8)
+                {
+                    printf("  ");
+                }
+                // Placeholder character
+                printf("%s--%s ", KRED, KNRM);
             }
-            printf("%*s| ", printing_offset, "");
+            printf("| ");
             for (unsigned char i = 0; i < OFFSET_LIMIT; i++)
             {
                 if (line_encoding[i].is_ascii)
@@ -186,7 +190,7 @@ int handle_input(char* input)
         }
     }
 
-    printf("\nTotal file size: %s%ld byte%s\n", KRED, file_size, KNRM);
+    printf("\nTotal file size: %s%ld byte%s\n", KMAG, file_size, KNRM);
 
     // Close the file buffer
     fclose(file_buffer);

@@ -5,20 +5,9 @@
 #include <stdbool.h>
 
 #include "file_handling.h"
+#include "print_macro.h"
 
 #define OFFSET_LIMIT 16
-
-// Terminal color:
-// Thanks to https://stackoverflow.com/a/27125283
-// Usage: printf("%s This line is red\n", KRED);
-#define KNRM  "\x1B[0m"
-#define KRED  "\x1B[31m"
-#define KGRN  "\x1B[32m"
-#define KYEL  "\x1B[33m"
-#define KBLU  "\x1B[34m"
-#define KMAG  "\x1B[35m"
-#define KCYN  "\x1B[36m"
-#define KWHT  "\x1B[37m"
 
 int handle_input(char* input)
 {
@@ -107,11 +96,11 @@ int handle_input(char* input)
             // Add a "0" to the byte < 16 for better formatting
             if (current_byte < 16)
             { 
-                printf("%s0%hhx%s ", KRED, current_byte, KNRM); 
+                printf("%s0%hhx%s ", RED, current_byte, NRM); 
             } 
             else 
             {
-                printf("%s%hhx%s ", KRED, current_byte, KNRM);
+                printf("%s%hhx%s ", RED, current_byte, NRM);
             }
         }
         else if (current_byte < 32)
@@ -121,16 +110,16 @@ int handle_input(char* input)
             // Add a "0" to the byte < 16 for better formatting
             if (current_byte < 16)
             { 
-                printf("%s0%hhx%s ", KYEL, current_byte, KNRM); 
+                printf("%s0%hhx%s ", YEL, current_byte, NRM); 
             } 
             else 
             {
-                printf("%s%hhx%s ", KYEL, current_byte, KNRM);
+                printf("%s%hhx%s ", YEL, current_byte, NRM);
             } 
         }
         else 
         {
-            printf("%s%hhx%s ", KGRN, current_byte, KNRM);
+            printf("%s%hhx%s ", GRN, current_byte, NRM);
         }
 
         line_encoding[byte_offset - 1].character = encoded_byte;
@@ -158,11 +147,11 @@ int handle_input(char* input)
                 }
                 else if (!line_encoding[i].printable && line_encoding[i].is_ascii)
                 {
-                    printf("%s%c%s", KYEL, line_encoding[i].character, KNRM);
+                    printf("%s%c%s", YEL, line_encoding[i].character, NRM);
                 }
                 else 
                 {
-                    printf("%s%c%s", KRED, line_encoding[i].character, KNRM);
+                    printf("%s%c%s", RED, line_encoding[i].character, NRM);
                 } 
             }
             printf("\n");
@@ -194,7 +183,7 @@ int handle_input(char* input)
                     printf("  ");
                 }
                 // Placeholder character
-                printf("%s--%s ", KBLU, KNRM);
+                printf("%s--%s ", BLU, NRM);
             }
             printf("| ");
             for (unsigned char i = 0; i < OFFSET_LIMIT; i++)
@@ -205,18 +194,18 @@ int handle_input(char* input)
                 }
                 else if (!line_encoding[i].printable && line_encoding[i].is_ascii)
                 {
-                    printf("%s%c%s", KYEL, line_encoding[i].character, KNRM);
+                    printf("%s%c%s", YEL, line_encoding[i].character, NRM);
                 }
                 else 
                 {
-                    printf("%s%c%s", KRED, line_encoding[i].character, KNRM);
+                    printf("%s%c%s", RED, line_encoding[i].character, NRM);
                 }
             }
             printf("\n");
         }
     }
 
-    printf("\nTotal file size: %s%ld byte%s\n", KMAG, file_size, KNRM);
+    printf("\nTotal file size: %s%s%ld byte%s\n", BOLD, RED, file_size, NRM);
 
     // Close the file buffer
     fclose(file_buffer);

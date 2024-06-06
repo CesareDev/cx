@@ -30,7 +30,6 @@ int handle_input(char* input)
     }
 
     // Get the file size in byte
-
     // Move the pointer at the end of the file
     if (fseek(file_buffer, 0L, SEEK_END) != 0) 
     {

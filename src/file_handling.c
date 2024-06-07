@@ -60,7 +60,6 @@ int print_hex(char* input, Options options)
     // End of the checks
 
     // Start reading the file and format the output
-    printf("Structure:\n<byte-offset> : <content> | <encoding>\n\n");
 
     // Read the first byte
     int current_byte = getc(file_buffer);
@@ -75,6 +74,7 @@ int print_hex(char* input, Options options)
     unsigned int offset_digits = (int)(log(file_size) / log(10)) + 1;
     if (!options.quiet)
     {
+        printf("Structure:\n<byte-offset> : <content> | <encoding>\n\n");
         printf("- %0*lx: ", offset_digits, offset);
     }
 
@@ -190,7 +190,7 @@ int print_hex(char* input, Options options)
             {
                 // Add a space if we surpass the first half of byte
                 int space_threshol = offset_diff - (OFFSET_LIMIT / 2);
-                if (space_threshol > 0 && i == space_threshol)
+                if (space_threshol > 0 && i == space_threshol && !options.quiet)
                 {
                     printf("  ");
                 }
@@ -222,7 +222,10 @@ int print_hex(char* input, Options options)
         }
     }
 
-    printf("\nTotal file size: %s%s%ld byte%s\n", BOLD, RED, file_size, NRM);
+    if (!options.quiet)
+    {
+        printf("\nTotal file size: %s%s%ld byte%s\n", BOLD, RED, file_size, NRM);
+    }
 
     // Close the file buffer
     fclose(file_buffer);

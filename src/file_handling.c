@@ -9,7 +9,7 @@
 
 #define OFFSET_LIMIT 16
 
-int handle_input(char* input)
+int print_hex(char* input, Options options)
 {
     // Check if the input is a directory
     struct stat path_stat;
@@ -57,6 +57,8 @@ int handle_input(char* input)
         return 0;
     }
 
+    // End of the checks
+
     // Start reading the file and format the output
     printf("Structure:\n<byte-offset> : <content> | <encoding>\n\n");
 
@@ -71,7 +73,10 @@ int handle_input(char* input)
     // ...
     //
     unsigned int offset_digits = (int)(log(file_size) / log(10)) + 1;
-    printf("- %0*lx: ", offset_digits, offset);
+    if (!options.quiet)
+    {
+        printf("- %0*lx: ", offset_digits, offset);
+    }
 
     typedef struct 
     {
@@ -128,15 +133,22 @@ int handle_input(char* input)
         current_byte = getc(file_buffer);
 
         // After printing 8 byte add a "separator"
-        if (byte_offset == 8)
+        if (byte_offset == OFFSET_LIMIT / 2 && !options.quiet)
         {
             printf("  ");
         }
         byte_offset++; 
 
-        // After print all the 16 (OFFSET_LIMIT) byte go to new line and print the offset 
+        // After print all the 16 (OFFSET_LIMIT) byte go to new line and print the offset  
         if (byte_offset > OFFSET_LIMIT && current_byte != EOF)
         {
+            if (options.quiet)
+            {
+                printf("\n");
+                byte_offset = 1;
+                offset += OFFSET_LIMIT; 
+                continue;
+            }
             printf("| ");
             for (unsigned char i = 0; i < OFFSET_LIMIT; i++)
             {
@@ -177,12 +189,18 @@ int handle_input(char* input)
             for (int i = 0; i < offset_diff; i++)
             {
                 // Add a space if we surpass the first half of byte
-                if (offset_diff - 8 > 0 && i == offset_diff - 8)
+                int space_threshol = offset_diff - (OFFSET_LIMIT / 2);
+                if (space_threshol > 0 && i == space_threshol)
                 {
                     printf("  ");
                 }
                 // Placeholder character
                 printf("%s--%s ", BLU, NRM);
+            }
+            if (options.quiet)
+            {
+                printf("\n");
+                continue;
             }
             printf("| ");
             for (unsigned char i = 0; i < OFFSET_LIMIT; i++)
@@ -208,6 +226,20 @@ int handle_input(char* input)
 
     // Close the file buffer
     fclose(file_buffer);
+
+    // Output a file
+//  if (!options.output)
+//  {
+//      return 0;
+//  }
+//   FILE* output_file;
+//  output_file = fopen("filename.txt", "w");
+//  if (output_file == NULL)
+//  {
+//      printf("Error creating the file");
+//      return 1;
+//  }
+//  fclose(output_file);
 
     return 0;
 }

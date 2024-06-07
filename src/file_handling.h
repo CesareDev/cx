@@ -1,6 +1,13 @@
 #ifndef FILE_HANDLING_H
 #define FILE_HANDLING_H
 
-int handle_input(char* input);
+#include <stdbool.h>
+
+typedef struct {
+    bool quiet;
+    bool output;
+} Options;
+
+int print_hex(char* input, Options options);
 
 #endif // FILE_HANDLING_H

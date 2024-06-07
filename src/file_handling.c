@@ -7,10 +7,14 @@
 #include "file_handling.h"
 #include "print_macro.h"
 
-#define OFFSET_LIMIT 16
-
 int print_hex(char* input, Options options)
 {
+    // Information of the error in arg_parsing.c file
+    if (options.offset < 0)
+    {
+        return 1;
+    }
+
     // Check if the input is a directory
     struct stat path_stat;
     stat(input, &path_stat);
@@ -62,6 +66,7 @@ int print_hex(char* input, Options options)
     // Start reading the file and format the output
 
     // Read the first byte
+    const int OFFSET_LIMIT = options.offset; 
     int current_byte = getc(file_buffer);
     unsigned int byte_offset = 1;
     unsigned long offset = 0;

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 #include "arg_parsing.h"
 #include "file_handling.h"
@@ -10,7 +11,30 @@ int print_help(char* bin_name)
     printf("-h: Print this page\n");
     printf("-q: Print the dump without encoding\n");
     printf("-o: Dump the output in a file\n");
+    printf("-n <offset>: Print the output with custom row length\n");
     return 0;
+}
+
+void quiet_option(Options* options)
+{
+    options->quiet = true;
+}
+
+void output_option(Options* options)
+{
+    options->output = true;
+}
+
+void offset_options(Options* options)
+{
+    int offset = atoi(optarg);
+    bool valid = offset % 4 == 0 && offset <= 64;
+    if (!valid)
+    {
+        printf("%d not valid offset, please insert a multiple of 4 less or equal than 64\n", offset);
+        offset = -1;
+    }
+    options->offset = offset;
 }
 
 int parse_argument(int arg_count, char* arg_vector[])
@@ -19,15 +43,18 @@ int parse_argument(int arg_count, char* arg_vector[])
 
     Options cmd_opts = {
         false,
-        false
+        false,
+        16
     };
 
-    while ((opt = getopt(arg_count, arg_vector, "hqo")) != -1)
+    // https://www.gnu.org/software/libc/manual/html_node/Using-Getopt.html
+    while ((opt = getopt(arg_count, arg_vector, "hqon:")) != -1)
     {
         switch (opt) {
             case 'h': return print_help(arg_vector[0]);
-            case 'q': cmd_opts.quiet = true; break;
-            case 'o': cmd_opts.output = true; break;
+            case 'q': quiet_option(&cmd_opts); break;
+            case 'o': output_option(&cmd_opts); break;
+            case 'n': offset_options(&cmd_opts); break;
             default: printf("Type: %s -h for the help page", arg_vector[0]); return 1;
         }
     }

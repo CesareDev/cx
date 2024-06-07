@@ -6,6 +6,7 @@
 typedef struct {
     bool quiet;
     bool output;
+    int offset;
 } Options;
 
 int print_hex(char* input, Options options);

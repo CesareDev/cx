@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "file_handling.h"
 #include "print_macro.h"
@@ -64,6 +65,9 @@ int print_hex(char* input, Options options)
     // End of the checks
 
     // Start reading the file and format the output
+    
+    unsigned char output_buffer[file_size];
+    long output_index = 0;
 
     // Read the first byte
     const int OFFSET_LIMIT = options.offset; 
@@ -97,6 +101,14 @@ int print_hex(char* input, Options options)
         unsigned char encoded_byte = (unsigned char)current_byte;
         bool ascii = isascii(current_byte);
         bool printable = true;
+
+        // Add the byte to the output buffer
+        if (options.output && current_byte != EOF)
+        {
+            output_buffer[output_index] = encoded_byte;
+            output_index++;
+        }
+
         // Non printable charcter -> control character or non ASCII character 
         if (!ascii)
         {
@@ -236,18 +248,36 @@ int print_hex(char* input, Options options)
     fclose(file_buffer);
 
     // Output a file
-//  if (!options.output)
-//  {
-//      return 0;
-//  }
-//   FILE* output_file;
-//  output_file = fopen("filename.txt", "w");
-//  if (output_file == NULL)
-//  {
-//      printf("Error creating the file");
-//      return 1;
-//  }
-//  fclose(output_file);
+    if (!options.output)
+    {
+        return 0;
+    }
+
+    FILE* output_file;
+    output_file = fopen(options.file_name, "w");
+    if (output_file == NULL)
+    {
+        printf("Error creating the file");
+        return 1;
+    }
+
+    fprintf(output_file, "unsigned char hex_dump[%ld] = { ", file_size);
+
+    for (long i = 0; i < file_size; i++)
+    {
+        if (i < file_size - 1)
+        {
+            fprintf(output_file, "0x%hhx, ", output_buffer[i]);
+        }
+        else 
+        {
+            fprintf(output_file, "0x%hhx", output_buffer[i]);
+        }
+    }
+
+    fprintf(output_file, " };\n");
+
+    fclose(output_file);
 
     return 0;
 }

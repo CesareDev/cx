@@ -7,11 +7,11 @@
 
 int print_help(char* bin_name)
 {
-    printf("Usage %s [OPTIONS] <file-name>\n\nOPTIONS:\n", bin_name);
+    printf("Usage: %s [OPTIONS] <file-name>\n\nOPTIONS:\n", bin_name);
     printf("-h: Print this page\n");
     printf("-q: Print the dump without encoding\n");
-    printf("-o: Dump the output in a file\n");
-    printf("-n <offset>: Print the output with custom row length\n");
+    printf("-o <file-name>: Write the dump in a '.c' like file\n");
+    printf("-n <length>: Print the dump with custom row length\n");
     return 0;
 }
 
@@ -23,6 +23,8 @@ void quiet_option(Options* options)
 void output_option(Options* options)
 {
     options->output = true;
+    // Input sanitazier
+    options->file_name = optarg;
 }
 
 void offset_options(Options* options)
@@ -48,7 +50,7 @@ int parse_argument(int arg_count, char* arg_vector[])
     };
 
     // https://www.gnu.org/software/libc/manual/html_node/Using-Getopt.html
-    while ((opt = getopt(arg_count, arg_vector, "hqon:")) != -1)
+    while ((opt = getopt(arg_count, arg_vector, "hqo:n:")) != -1)
     {
         switch (opt) {
             case 'h': return print_help(arg_vector[0]);

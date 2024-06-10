@@ -10,6 +10,7 @@ int print_help(char* bin_name)
     printf("Usage: %s [OPTIONS] <file-name>\n\nOPTIONS:\n", bin_name);
     printf("-h: Print this page\n");
     printf("-q: Print the dump without encoding\n");
+    printf("-w: Print the dump without the colors, useful if the you want to pipe the output\n");
     printf("-o <file-name>: Write the dump in a '.c' like file\n");
     printf("-n <length>: Print the dump with custom row length\n");
     return 0;
@@ -39,6 +40,11 @@ void offset_options(Options* options)
     options->offset = offset;
 }
 
+void white_options(Options* options)
+{
+    options->white = true;
+}
+
 int parse_argument(int arg_count, char* arg_vector[])
 {
     int opt;
@@ -46,15 +52,18 @@ int parse_argument(int arg_count, char* arg_vector[])
     Options cmd_opts = {
         false,
         false,
-        16
+        false,
+        16,
+        ""
     };
 
     // https://www.gnu.org/software/libc/manual/html_node/Using-Getopt.html
-    while ((opt = getopt(arg_count, arg_vector, "hqo:n:")) != -1)
+    while ((opt = getopt(arg_count, arg_vector, "hqwo:n:")) != -1)
     {
         switch (opt) {
             case 'h': return print_help(arg_vector[0]);
             case 'q': quiet_option(&cmd_opts); break;
+            case 'w': white_options(&cmd_opts); break;
             case 'o': output_option(&cmd_opts); break;
             case 'n': offset_options(&cmd_opts); break;
             default: printf("Type: %s -h for the help page", arg_vector[0]); return 1;

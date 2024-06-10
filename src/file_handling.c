@@ -116,12 +116,26 @@ int print_hex(char* input, Options options)
             printable = false;
             // Add a "0" to the byte < 16 for better formatting
             if (current_byte < 16)
-            { 
-                printf("%s0%hhx%s ", RED, current_byte, NRM); 
+            {
+                if (options.white)
+                {
+                    printf("0%hhx ", current_byte); 
+                }
+                else 
+                {
+                    printf("%s0%hhx%s ", RED, current_byte, NRM); 
+                }
             } 
             else 
             {
-                printf("%s%hhx%s ", RED, current_byte, NRM);
+                if (options.white)
+                {
+                    printf("%hhx ", current_byte); 
+                }
+                else 
+                {
+                    printf("%s%hhx%s ", RED, current_byte, NRM);
+                }
             }
         }
         else if (current_byte < 32)
@@ -131,16 +145,37 @@ int print_hex(char* input, Options options)
             // Add a "0" to the byte < 16 for better formatting
             if (current_byte < 16)
             { 
-                printf("%s0%hhx%s ", YEL, current_byte, NRM); 
+                if (options.white)
+                {
+                    printf("0%hhx ", current_byte);
+                }
+                else 
+                {
+                    printf("%s0%hhx%s ", YEL, current_byte, NRM);
+                }
             } 
             else 
             {
-                printf("%s%hhx%s ", YEL, current_byte, NRM);
+                if (options.white)
+                {
+                    printf("%hhx ", current_byte); 
+                }
+                else 
+                {
+                    printf("%s%hhx%s ", YEL, current_byte, NRM);
+                }
             } 
         }
         else 
         {
-            printf("%s%hhx%s ", GRN, current_byte, NRM);
+            if (options.white)
+            {
+                printf("%hhx ", current_byte); 
+            }
+            else 
+            {
+                printf("%s%hhx%s ", GRN, current_byte, NRM);
+            }
         }
 
         line_encoding[byte_offset - 1].character = encoded_byte;
@@ -169,7 +204,11 @@ int print_hex(char* input, Options options)
             printf("| ");
             for (unsigned char i = 0; i < OFFSET_LIMIT; i++)
             {
-                if (line_encoding[i].is_ascii && line_encoding[i].printable)
+                if (options.white)
+                {
+                    printf("%c", line_encoding[i].character);
+                }
+                else if (line_encoding[i].is_ascii && line_encoding[i].printable)
                 {
                     printf("%c", line_encoding[i].character);
                 }
@@ -212,7 +251,18 @@ int print_hex(char* input, Options options)
                     printf("  ");
                 }
                 // Placeholder character
-                printf("%s--%s ", BLU, NRM);
+
+                if (!options.quiet)
+                {
+                    if (options.white)
+                    {
+                        printf("-- ");
+                    }
+                    else
+                    {
+                        printf("%s--%s ", BLU, NRM);
+                    }
+                } 
             }
             if (options.quiet)
             {
@@ -222,7 +272,11 @@ int print_hex(char* input, Options options)
             printf("| ");
             for (unsigned char i = 0; i < OFFSET_LIMIT; i++)
             {
-                if (line_encoding[i].is_ascii && line_encoding[i].printable)
+                if (options.white)
+                {
+                    printf("%c", line_encoding[i].character);
+                }
+                else if (line_encoding[i].is_ascii && line_encoding[i].printable)
                 {
                     printf("%c", line_encoding[i].character);
                 }
@@ -241,7 +295,14 @@ int print_hex(char* input, Options options)
 
     if (!options.quiet)
     {
-        printf("\nTotal file size: %s%s%ld byte%s\n", BOLD, RED, file_size, NRM);
+        if (options.white)
+        {
+            printf("\nTotal file size: %ld byte\n", file_size);
+        }
+        else 
+        {
+            printf("\nTotal file size: %s%s%ld byte%s\n", BOLD, RED, file_size, NRM);
+        }
     }
 
     // Close the file buffer

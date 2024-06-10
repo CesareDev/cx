@@ -6,6 +6,7 @@
 typedef struct {
     bool quiet;
     bool output;
+    bool white;
     int offset;
     char* file_name;
 } Options;

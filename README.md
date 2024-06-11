@@ -1,6 +1,6 @@
 # CX
 
-Custome hex dump written in C following the style of the existing `xxd`
+Custome hex dump written in C following the style of `xxd`
 
 ## Requirements
 

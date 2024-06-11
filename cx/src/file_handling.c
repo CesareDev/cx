@@ -18,16 +18,16 @@ int print_hex(char* input, Options options)
 
     // Check if the input is a directory
     struct stat path_stat;
-    stat(input, &path_stat);
+    int stat_result = stat(input, &path_stat); 
+
     if (S_ISDIR(path_stat.st_mode))
     {
         printf("Can't open a directory\n");
         return 1;
-    }
+    } 
 
-    // Open the file
-    FILE* file_buffer = fopen(input, "rb");  
-
+    // Open the file or write into the stream if the input is a string
+    FILE* file_buffer = fopen(input, "rb"); 
     if (file_buffer == NULL)
     {
         printf("File doesn't exist\n");

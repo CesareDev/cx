@@ -12,7 +12,7 @@ Custome hex dump written in C following the style of `xxd`
     - `git clone https://github.com/CesareDev/cx.git`
 2. Run the script `build.sh`
 3. Navigate to the to the desired build and compile
-    - `cd build/release && make` 
-    - `cd build/debug && make`
+    - `cd build/release/cx && make` 
+    - `cd build/debug/cx && make`
 4. Run the bin
     - `./ck some_file`

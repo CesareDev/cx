@@ -7,7 +7,7 @@
 
 int print_help(char* bin_name)
 {
-    printf("Usage: %s [OPTIONS] <file-name>\n\nOPTIONS:\n", bin_name);
+    printf("Usage: %s [OPTIONS] <file-name-or-string>\n\nOPTIONS:\n", bin_name);
     printf("    -h:             Print this page\n");
     printf("    -q:             Print the dump without encoding\n");
     printf("    -w:             Print the dump without the colors, useful if the you want to pipe the output\n");

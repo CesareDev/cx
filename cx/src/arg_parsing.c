@@ -56,7 +56,7 @@ int parse_argument(int arg_count, char* arg_vector[])
         16,
         ""
     };
-
+    
     // https://www.gnu.org/software/libc/manual/html_node/Using-Getopt.html
     while ((opt = getopt(arg_count, arg_vector, "hqwo:n:")) != -1)
     {

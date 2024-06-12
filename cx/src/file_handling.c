@@ -8,6 +8,8 @@
 #include "file_handling.h"
 #include "print_macro.h"
 
+#define MAX_INPUT_SIZE 1024
+
 int print_hex(char* input, Options options)
 {
     // Information of the error in arg_parsing.c file
@@ -20,6 +22,13 @@ int print_hex(char* input, Options options)
     struct stat path_stat;
     int stat_result = stat(input, &path_stat); 
 
+    // Not a file
+    bool input_is_file = true;
+    if (stat_result != 0)
+    {
+        input_is_file = false;
+    }
+
     if (S_ISDIR(path_stat.st_mode))
     {
         printf("Can't open a directory\n");
@@ -27,7 +36,18 @@ int print_hex(char* input, Options options)
     } 
 
     // Open the file or write into the stream if the input is a string
-    FILE* file_buffer = fopen(input, "rb"); 
+
+    FILE* file_buffer = NULL;
+    if (input_is_file)
+    {
+        file_buffer = fopen(input, "rb"); 
+    }
+    else 
+    {
+        unsigned long input_size = strnlen(input, MAX_INPUT_SIZE);
+        file_buffer = fmemopen(input, input_size + 1, "rb");
+    }
+
     if (file_buffer == NULL)
     {
         printf("File doesn't exist\n");
@@ -250,8 +270,8 @@ int print_hex(char* input, Options options)
                 {
                     printf("  ");
                 }
-                // Placeholder character
 
+                // Placeholder character
                 if (!options.quiet)
                 {
                     if (options.white)
@@ -272,6 +292,11 @@ int print_hex(char* input, Options options)
             printf("| ");
             for (unsigned char i = 0; i < OFFSET_LIMIT; i++)
             {
+                // Stop printing if we arrive at the last available character
+                if (line_encoding[i].character == 0)
+                {
+                    break;
+                }
                 if (options.white)
                 {
                     printf("%c", line_encoding[i].character);

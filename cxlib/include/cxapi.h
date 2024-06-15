@@ -4,10 +4,10 @@
 typedef struct {
     unsigned char* buffer;
     unsigned long size;
-} HexBuffer;
+} HexData;
 
 // Remember to free the memory
-HexBuffer get_hex(const char* filename);
-void free_hex(HexBuffer buffer);
+HexData get_hex(const char* filename);
+void free_hex(HexData buffer);
 
 #endif // !CXAPI_H

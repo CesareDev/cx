@@ -4,9 +4,9 @@
 
 #include "cxapi.h"
 
-HexBuffer get_hex(const char* filename)
+HexData get_hex(const char* filename)
 {
-    HexBuffer output = { NULL, 0 };
+    HexData output = { NULL, 0 };
     // Check if the input is a directory
     struct stat path_stat;
     int stat_result = stat(filename, &path_stat);
@@ -71,7 +71,7 @@ HexBuffer get_hex(const char* filename)
     return output;
 }
 
-void free_hex(HexBuffer buffer)
+void free_hex(HexData buffer)
 {
     if (buffer.buffer != NULL)
     {

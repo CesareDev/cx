@@ -6,19 +6,19 @@
 
 HexBuffer get_hex(const char* filename)
 {
-    HexBuffer failed = { NULL, 0 };
+    HexBuffer output = { NULL, 0 };
     // Check if the input is a directory
     struct stat path_stat;
     int stat_result = stat(filename, &path_stat);
     if (stat_result != 0 || S_ISDIR(path_stat.st_mode))
     {
-        return failed;
+        return output;
     }
 
     FILE* file_buffer = fopen(filename, "rb"); 
     if (file_buffer == NULL)
     {
-        return failed;
+        return output;
     }
 
     // Get the file size in byte
@@ -26,7 +26,7 @@ HexBuffer get_hex(const char* filename)
     if (fseek(file_buffer, 0L, SEEK_END) != 0) 
     {
         fclose(file_buffer);
-        return failed;
+        return output;
     }
 
     // Calculate the size in byte of the file
@@ -35,7 +35,7 @@ HexBuffer get_hex(const char* filename)
     if (file_size < 0)
     {
         fclose(file_buffer);
-        return failed;
+        return output;
     }
     
     // Put the pointer at the start of the file
@@ -44,7 +44,7 @@ HexBuffer get_hex(const char* filename)
     if (file_size == 0)
     {
         fclose(file_buffer);
-        return failed;
+        return output;
     }
 
     unsigned char* buffer = (unsigned  char*)malloc(file_size);
@@ -65,7 +65,8 @@ HexBuffer get_hex(const char* filename)
         current_byte = getc(file_buffer);
     }
 
-    HexBuffer output = { buffer, file_size };
+    output.buffer = buffer;
+    output.size = file_size;
 
     return output;
 }

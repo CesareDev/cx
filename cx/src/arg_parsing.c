@@ -10,7 +10,7 @@ int print_help(char* bin_name)
     printf("Usage: %s [OPTIONS] <file-name-or-string>\n\nOPTIONS:\n", bin_name);
     printf("    -h:             Print this page\n");
     printf("    -q:             Print the dump without encoding\n");
-    printf("    -w:             Print the dump without the colors, useful if the you want to pipe the output\n");
+    printf("    -w:             Print the dump without the colors, useful if the you want to pipe the output like: cx -w <file> | less\n");
     printf("    -o <file-name>: Write the dump in a '.c' like file\n");
     printf("    -n <length>:    Print the dump with custom row length. If not specified the default row length is 16\n");
     return 0;

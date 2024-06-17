@@ -11,6 +11,8 @@ set(SOURCES
 set(INCLUDE_DIR 
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/cxapi.h ${CMAKE_CURRENT_BINARY_DIR}/include/cxapi.h)
 # set(LIB_DIR ${CMAKE_SOURCE_DIR}/dep/lib)
 # set(LIB_NAME m)
 

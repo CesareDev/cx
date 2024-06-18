@@ -16,3 +16,6 @@ Custome hex dump written in C following the style of `xxd`
     - `cd build/debug/cx && make`
 4. Run the bin
     - `./ck some_file`
+
+- For the library go to `build/<release/debug>/cxlib/`
+- Here you can find the header file `cxapi.h` inside the `include` directory

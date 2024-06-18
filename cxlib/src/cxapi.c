@@ -71,10 +71,10 @@ HexData get_hex(const char* filename)
     return output;
 }
 
-void free_hex(HexData buffer)
+void free_hex(HexData data)
 {
-    if (buffer.buffer != NULL)
+    if (data.buffer != NULL)
     {
-        free(buffer.buffer);
+        free(data.buffer);
     }
 }

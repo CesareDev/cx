@@ -47,7 +47,7 @@ HexData get_hex(const char* filename)
         return output;
     }
 
-    unsigned char* buffer = (unsigned  char*)malloc(file_size);
+    unsigned char* buffer = (unsigned char*)malloc(file_size);
 
     int current_byte = getc(file_buffer);
     unsigned long offset = 0;
